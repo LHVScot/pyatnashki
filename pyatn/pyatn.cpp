@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
@@ -6,28 +6,28 @@
 using namespace std;
 
 const int SIZE = 3; // Размер игрового поля
-int board[SIZE][SIZE]; // Игровое поле
+int doska1[SIZE][SIZE]; // Игровое поле
 
 // Функция для инициализации игрового поля
-void initBoard() {
+void doska() {
     int num = 1;
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
-            board[i][j] = num++;
+            doska1[i][j] = num++;
         }
     }
-    board[SIZE - 1][SIZE - 1] = 0; // Пустая ячейка
+    doska1[SIZE - 1][SIZE - 1] = 0; // Пустая ячейка
 }
 
 // Функция для отображения игрового поля
-void printBoard() {
+void printdoska() {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
-            if (board[i][j] == 0) {
+            if (doska1[i][j] == 0) {
                 cout << "   "; 
             }
             else {
-                cout << board[i][j] << " ";
+                cout << doska1[i][j] << " ";
             }
         }
         cout << endl;
@@ -35,10 +35,10 @@ void printBoard() {
 }
 
 // Функция для нахождения позиции пустой ячейки
-void findEmptyPosition(int& emptyRow, int& emptyCol) {
+void ifpusto(int& emptyRow, int& emptyCol) {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
-            if (board[i][j] == 0) {
+            if (doska1[i][j] == 0) {
                 emptyRow = i;
                 emptyCol = j;
                 return;
@@ -48,16 +48,16 @@ void findEmptyPosition(int& emptyRow, int& emptyCol) {
 }
 
 // Функция для перемещения плитки
-bool moveTile(int tile) {
-    int emptyRow, emptyCol;
-    findEmptyPosition(emptyRow, emptyCol);
+bool sdvigPlitki(int tile) {
+    int pustotaRow, pustotaCol;
+    ifpusto(pustotaRow, pustotaCol);
 
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
-            if (board[i][j] == tile) {
+            if (doska1[i][j] == tile) {
                 // Проверяем, можно ли переместить плитку
-                if ((i == emptyRow && abs(j - emptyCol) == 1) || (j == emptyCol && abs(i - emptyRow) == 1)) {
-                    swap(board[i][j], board[emptyRow][emptyCol]);
+                if ((i == pustotaRow && abs(j - pustotaCol) == 1) || (j == pustotaCol && abs(i - pustotaRow) == 1)) {
+                    swap(doska1[i][j], doska1[pustotaRow][pustotaCol]);
                     return true;
                 }
             }
@@ -67,14 +67,14 @@ bool moveTile(int tile) {
 }
 
 // Функция для проверки, завершена ли игра
-bool isSolved() {
+bool pobeda() {
     int num = 1;
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
             if (i == SIZE - 1 && j == SIZE - 1) {
-                return board[i][j] == 0; // Последняя ячейка должна быть пустой
+                return doska1[i][j] == 0; 
             }
-            if (board[i][j] != num++) {
+            if (doska1[i][j] != num++) {
                 return false;
             }
         }
@@ -84,32 +84,32 @@ bool isSolved() {
 
 int main() {
     setlocale(LC_ALL, "ru");
-    initBoard();
+    doska();
     srand(time(0));
 
     // Перемешиваем плитки
     for (int i = 0; i < 100; ++i) {
         int tile = rand() % (SIZE * SIZE);
-        moveTile(tile);
+        sdvigPlitki(tile);
     }
 
     while (true) {
-        printBoard();
-        if (isSolved()) {
-            cout << "Поздравляем! Вы выиграли!" << endl;
+        printdoska();
+        if (pobeda()) {
+            cout << "АЛЛИЛУЯ, АЛЛИЛУЯ, АЛЛИЛУЯ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
             break;
         }
 
-        cout << "Введите номер плитки для перемещения (0 для выхода): ";
-        int tile;
-        cin >> tile;
+        cout << "Введите номер плитки(0 для выхода): ";
+        int plitka;
+        cin >> plitka;
 
-        if (tile == 0) {
+        if (plitka == 0) {
             break;
         }
 
-        if (!moveTile(tile)) {
-            cout << "Невозможно переместить плитку!" << endl;
+        if (!sdvigPlitki(plitka)) {
+            cout << "фиг тебе!" << endl;
         }
     }
 
